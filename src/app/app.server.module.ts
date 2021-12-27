@@ -5,7 +5,7 @@ import { AppModule } from './app.module';
 import { AppComponent } from './app.component';
 import { TransferState } from '@angular/platform-browser';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { translateServerLoaderFactory } from './translate-server.loader';
+import { translateServerLoaderFactory } from './shareds/loaders/translate-server.loader';
 
 @NgModule({
   imports: [
@@ -18,6 +18,7 @@ import { translateServerLoaderFactory } from './translate-server.loader';
         useFactory: translateServerLoaderFactory,
         deps: [TransferState],
       },
+      defaultLanguage: 'en'
     }),
   ],
   bootstrap: [AppComponent],

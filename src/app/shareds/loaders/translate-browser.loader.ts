@@ -27,7 +27,11 @@ export class TranslateBrowserLoader implements TranslateLoader {
         observer.complete();
       });
     } else {
-      return new TranslateHttpLoader(this.http).getTranslation(lang);
+      return new TranslateHttpLoader(
+        this.http,
+        './assets/i18n/',
+        `.json?cacheBuster=${new Date().getTime()}`
+      ).getTranslation(lang);
     }
   }
 }

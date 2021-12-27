@@ -7,7 +7,7 @@ import { TransferHttpCacheModule } from '@nguniversal/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { translateBrowserLoaderFactory } from './translate-browser.loader';
+import { translateBrowserLoaderFactory } from './shareds/loaders/translate-browser.loader';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -27,6 +27,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: translateBrowserLoaderFactory,
         deps: [HttpClient, TransferState],
       },
+      defaultLanguage: 'en'
     }),
   ],
   providers: [],

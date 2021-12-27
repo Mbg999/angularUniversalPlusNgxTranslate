@@ -8,14 +8,23 @@ import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { existsSync } from 'fs';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const domino = require('domino');
+const cookieParser = require('cookie-parser');
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
+  server.use(cookieParser()); // cookie parser middleware, to get an easy access to cookies data
   const distFolder = join(process.cwd(), 'dist/universalpruebas/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html'))
     ? 'index.original.html'
     : 'index';
+
+  // make window and document objects accesible from server side rendering
+  const window = domino.createWindow(indexHtml)
+  global['window'] = window
+  global['document'] = window.document
 
   // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   server.engine(
@@ -40,11 +49,6 @@ export function app(): express.Express {
 
   // All regular routes use the Universal engine
   server.get('*', (req, res) => {
-    // -- importante para tener el idioma seleccionado almacenado en el navegador
-    if(!req.cookies || typeof req.cookies != 'object') req.cookies = {}
-    req.cookies.lang =
-      req.cookies?.lang || req.headers['accept-language']?.substring(0, 2);
-      // /--
     res.render(indexHtml, {
       req,
       providers: [
